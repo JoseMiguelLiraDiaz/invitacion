@@ -45,40 +45,43 @@
     </form>
 
     <script>
-        // Conectar a Supabase con la URL y la clave proporcionadas
-        const supabaseUrl = 'https://ozehtmkllygdqfcznttn.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // Asegúrate de que el código se ejecute después de que la librería de supabase haya sido cargada
+        document.addEventListener('DOMContentLoaded', function () {
+            // Conectar a Supabase con la URL y la clave proporcionadas
+            const supabaseUrl = 'https://ozehtmkllygdqfcznttn.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Función para manejar el formulario
-        document.getElementById('formulario').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const numero = document.getElementById('numero').value;
+            // Función para manejar el formulario
+            document.getElementById('formulario').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const numero = document.getElementById('numero').value;
 
-            // Verificar si el usuario está autenticado
-            const user = supabase.auth.user();
-            if (!user) {
-                alert("Por favor, inicia sesión para insertar el número.");
-                return;
-            }
-
-            // Insertar el número si el usuario está autenticado
-            try {
-                const { data, error } = await supabase
-                    .from('invitacion')
-                    .insert([
-                        { Numero: numero }  // Inserta el número en la tabla invitacion
-                    ]);
-
-                if (error) {
-                    alert('Error al guardar el número: ' + error.message);
-                } else {
-                    alert('Número guardado correctamente!');
+                // Verificar si el usuario está autenticado
+                const user = supabase.auth.user();
+                if (!user) {
+                    alert("Por favor, inicia sesión para insertar el número.");
+                    return;
                 }
-            } catch (error) {
-                console.error('Error al conectar con la base de datos:', error);
-                alert('Error al conectar con la base de datos');
-            }
+
+                // Insertar el número si el usuario está autenticado
+                try {
+                    const { data, error } = await supabase
+                        .from('invitacion')
+                        .insert([
+                            { Numero: numero }  // Inserta el número en la tabla invitacion
+                        ]);
+
+                    if (error) {
+                        alert('Error al guardar el número: ' + error.message);
+                    } else {
+                        alert('Número guardado correctamente!');
+                    }
+                } catch (error) {
+                    console.error('Error al conectar con la base de datos:', error);
+                    alert('Error al conectar con la base de datos');
+                }
+            });
         });
     </script>
 </body>
