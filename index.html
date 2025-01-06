@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Número</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/supabase.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Formulario</h1>
+    <h1>Formulario de Número</h1>
     <form id="formulario">
         <div class="form-group">
             <label for="numero">Número:</label>
@@ -43,29 +44,40 @@
         <button type="submit">Enviar</button>
     </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        // URL y clave de Supabase
+        // Conectar a Supabase
         const supabaseUrl = 'https://ozehtmkllygdqfcznttn.supabase.co';
-        const supabaseKey = 'tu_supabase_key'; // Sustituye con tu API Key
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Manejo del formulario
+        // Función para manejar el formulario
         document.getElementById('formulario').addEventListener('submit', async function(e) {
             e.preventDefault();
             const numero = document.getElementById('numero').value;
 
-            // Insertar el número en la base de datos de Supabase en la tabla 'invitacion'
-            const { data, error } = await supabase
-                .from('invitacion') // Nombre de la tabla
-                .insert([{ numero: numero }]); // Insertar el valor de 'numero'
+            // Verificar si el usuario está autenticado
+            const user = supabase.auth.user();
+            if (!user) {
+                alert("Por favor, inicia sesión para insertar el número.");
+                return;
+            }
 
-            if (error) {
-                alert('Error al guardar el número');
-                console.error(error);
-            } else {
-                alert(`Número guardado: ${numero}`);
-                console.log('Datos guardados:', data);
+            // Insertar el número si el usuario está autenticado
+            try {
+                const { data, error } = await supabase
+                    .from('invitacion')
+                    .insert([
+                        { Numero: numero }  // Inserta el número en la tabla invitacion
+                    ]);
+
+                if (error) {
+                    alert('Error al guardar el número: ' + error.message);
+                } else {
+                    alert('Número guardado correctamente!');
+                }
+            } catch (error) {
+                console.error('Error al conectar con la base de datos:', error);
+                alert('Error al conectar con la base de datos');
             }
         });
     </script>
