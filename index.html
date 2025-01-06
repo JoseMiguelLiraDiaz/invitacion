@@ -13,14 +13,14 @@
         }
 
         .invitation-container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 20px auto;
             background-color: white;
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            text-align: center;
+            display: flex;
             position: relative;
         }
 
@@ -28,6 +28,8 @@
             background-color: #ffb6c1;
             padding: 15px;
             border-radius: 10px 10px 0 0;
+            width: 100%;
+            text-align: center;
         }
 
         .invitation-header img {
@@ -42,7 +44,8 @@
         }
 
         .invitation-content {
-            margin: 20px 0;
+            flex: 2;
+            margin-left: 20px;
             color: #555;
         }
 
@@ -58,12 +61,14 @@
         }
 
         .form-container {
-            margin-top: 40px;
-        }
-
-        .form-container form {
-            margin-top: 20px;
-            text-align: left;
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .form-container label {
@@ -114,16 +119,19 @@
             <p>Iglesia Santísimo Corazón Sagrado<br>Dirección de la Iglesia</p>
             <p>14 Horas</p>
             <p>Quinta Los Olivos<br>Dirección del lugar de la celebración</p>
+            <div class="invitation-footer">
+                <p><strong>Mis Padrinos:</strong> Laura Lozano y Julio Vera</p>
+                <p><strong>Mis Papás:</strong> Perla Lozano y Gustavo Olvera</p>
+            </div>
         </div>
-        <div class="invitation-footer">
-            <p><strong>Mis Padrinos:</strong> Laura Lozano y Julio Vera</p>
-            <p><strong>Mis Papás:</strong> Perla Lozano y Gustavo Olvera</p>
-        
-            <label for="numero">Número (55XXXXXXXX):</label>
-            <input type="text" id="numero" name="numero" placeholder="55XXXXXXXX" maxlength="10" pattern="\d{10}" required>
-            <span class="legend">Debe contener exactamente 10 dígitos.</span>
-            <button type="submit">Enviar</button>
-        </form>
+        <div class="form-container">
+            <form id="formulario">
+                <label for="numero">Número (55XXXXXXXX):</label>
+                <input type="text" id="numero" name="numero" placeholder="55XXXXXXXX" maxlength="10" pattern="\d{10}" required>
+                <span class="legend">Debe contener exactamente 10 dígitos.</span>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
     </div>
 
     <script>
