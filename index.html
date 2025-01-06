@@ -47,7 +47,8 @@
         document.getElementById('formulario').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evita que se recargue la página
 
-            const numero = document.getElementById('numero').value;
+            const numeroInput = document.getElementById('numero');
+            const numero = numeroInput.value;
 
             const insertEndpoint = 'https://ozehtmkllygdqfcznttn.supabase.co/rest/v1/invitacion';
             const queryEndpoint = `https://ozehtmkllygdqfcznttn.supabase.co/rest/v1/datos?Nuemro=eq.${numero}&select=*`;
@@ -95,6 +96,8 @@
                     if (queryData.length > 0) {
                         const { Nombre, Personas, Mesa } = queryData[0];
                         alert(`Ha confirmado "${Nombre}" para "${Personas}" personas en la mesa "${Mesa}".`);
+                        // Limpia el campo de entrada después de la alerta
+                        numeroInput.value = '';
                     } else {
                         console.log('No se encontró información para el número proporcionado.');
                     }
