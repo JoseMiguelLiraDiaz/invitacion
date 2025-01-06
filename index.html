@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Número</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/supabase.min.js"></script>
+    <title>Formulario de Supabase</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,47 +34,48 @@
     </style>
 </head>
 <body>
-    <h1>Formulario de Número</h1>
+    <h1>Formulario para enviar datos a Supabase</h1>
     <form id="formulario">
         <div class="form-group">
             <label for="numero">Número:</label>
-            <input type="text" id="numero" name="numero" placeholder="Ingresa tu número" required>
+            <input type="text" id="numero" name="numero" placeholder="Ingresa el Número" required>
         </div>
         <button type="submit">Enviar</button>
     </form>
 
     <script>
-        // Asegúrate de que el código se ejecute después de que la librería de supabase haya sido cargada
-        document.addEventListener('DOMContentLoaded', function () {
-            // Conectar a Supabase con la URL y la clave proporcionadas
-            const supabaseUrl = 'https://ozehtmkllygdqfcznttn.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
+        document.getElementById('formulario').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evita que se recargue la página
 
-            // Usar Supabase para inicializar el cliente
-            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            const numero = document.getElementById('numero').value;
 
-            // Manejar el envío del formulario
-            document.getElementById('formulario').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const numero = document.getElementById('numero').value;
+            const endpoint = 'https://ozehtmkllygdqfcznttn.supabase.co/rest/v1/invitacion';
+            const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
+            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
 
-                try {
-                    // Insertar datos en la tabla 'invitacion'
-                    const { data, error } = await supabase
-                        .from('invitacion')
-                        .insert([{ Numero: numero }]);
+            // Datos a enviar
+            const data = [{ Numero: numero }];
 
-                    if (error) {
-                        console.error('Error al insertar datos:', error);
-                        alert('Error al guardar el número.');
-                    } else {
-                        alert('Número guardado correctamente: ' + numero);
-                    }
-                } catch (error) {
-                    console.error('Error al conectar con Supabase:', error);
-                    alert('Error al conectar con Supabase.');
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    alert('Datos enviados correctamente a Supabase');
+                } else {
+                    const error = await response.json();
+                    alert('Error al enviar los datos: ' + JSON.stringify(error));
                 }
-            });
+            } catch (error) {
+                alert('Error en la conexión: ' + error.message);
+            }
         });
     </script>
 </body>
