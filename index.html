@@ -50,36 +50,30 @@
             // Conectar a Supabase con la URL y la clave proporcionadas
             const supabaseUrl = 'https://ozehtmkllygdqfcznttn.supabase.co';
             const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-            // Función para manejar el formulario
+            // Usar Supabase para inicializar el cliente
+            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+            // Manejar el envío del formulario
             document.getElementById('formulario').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const numero = document.getElementById('numero').value;
 
-                // Verificar si el usuario está autenticado
-                const user = supabase.auth.user();
-                if (!user) {
-                    alert("Por favor, inicia sesión para insertar el número.");
-                    return;
-                }
-
-                // Insertar el número si el usuario está autenticado
                 try {
+                    // Insertar datos en la tabla 'invitacion'
                     const { data, error } = await supabase
                         .from('invitacion')
-                        .insert([
-                            { Numero: numero }  // Inserta el número en la tabla invitacion
-                        ]);
+                        .insert([{ Numero: numero }]);
 
                     if (error) {
-                        alert('Error al guardar el número: ' + error.message);
+                        console.error('Error al insertar datos:', error);
+                        alert('Error al guardar el número.');
                     } else {
-                        alert('Número guardado correctamente!');
+                        alert('Número guardado correctamente: ' + numero);
                     }
                 } catch (error) {
-                    console.error('Error al conectar con la base de datos:', error);
-                    alert('Error al conectar con la base de datos');
+                    console.error('Error al conectar con Supabase:', error);
+                    alert('Error al conectar con Supabase.');
                 }
             });
         });
