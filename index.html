@@ -48,7 +48,7 @@
         // URL y clave de Supabase
         const supabaseUrl = 'https://ozehtmkllygdqfcznttn.supabase.co';
         const supabaseKey = 'tu_supabase_key'; // Sustituye con tu API Key
-        const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         // Manejo del formulario
         document.getElementById('formulario').addEventListener('submit', async function(e) {
