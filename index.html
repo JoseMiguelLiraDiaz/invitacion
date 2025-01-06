@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Supabase</title>
+    <title>Confirmación de Reserva</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,13 +34,13 @@
     </style>
 </head>
 <body>
-    <h1>Formulario para enviar datos a Supabase</h1>
+    <h1>Confirmación de Reserva</h1>
     <form id="formulario">
         <div class="form-group">
             <label for="numero">Número:</label>
-            <input type="text" id="numero" name="numero" placeholder="Ingresa el Número" required>
+            <input type="text" id="numero" name="numero" placeholder="Ingresa tu número" required>
         </div>
-        <button type="submit">Enviar</button>
+        <button type="submit">Confirmar</button>
     </form>
 
     <script>
@@ -49,17 +49,19 @@
 
             const numero = document.getElementById('numero').value;
 
-            const endpoint = 'https://ozehtmkllygdqfcznttn.supabase.co/rest/v1/invitacion';
+            const insertEndpoint = 'https://ozehtmkllygdqfcznttn.supabase.co/rest/v1/invitacion';
+            const queryEndpoint = `https://ozehtmkllygdqfcznttn.supabase.co/rest/v1/datos?Nuemro=eq.${numero}&select=*`;
             const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
             const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZWh0bWtsbHlnZHFmY3pudHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxMzUwOTYsImV4cCI6MjA1MTcxMTA5Nn0.Jb3rqPhD5H8O35Nw3j7m0GQn7Hg2uj-xtKgdKNiRD5o';
 
-            // Datos a enviar
+            // Datos a insertar
             const data = {
                 Numero: numero
             };
 
             try {
-                const response = await fetch(endpoint, {
+                // Realiza la inserción
+                const insertResponse = await fetch(insertEndpoint, {
                     method: 'POST',
                     headers: {
                         'apikey': apiKey,
@@ -69,14 +71,39 @@
                     body: JSON.stringify(data),
                 });
 
-                if (response.ok) {
-                    alert('Datos enviados correctamente a Supabase');
+                if (!insertResponse.ok) {
+                    const insertError = await insertResponse.json();
+                    console.log('Error al insertar los datos:', insertError);
+                    return;
+                }
+
+                console.log('Datos insertados correctamente.');
+
+                // Realiza la búsqueda
+                const queryResponse = await fetch(queryEndpoint, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${token}`,
+                        'Range': '0-9',
+                    },
+                });
+
+                if (queryResponse.ok) {
+                    const queryData = await queryResponse.json();
+
+                    if (queryData.length > 0) {
+                        const { Nombre, Personas, Mesa } = queryData[0];
+                        alert(`Ha confirmado "${Nombre}" para "${Personas}" personas en la mesa "${Mesa}".`);
+                    } else {
+                        console.log('No se encontró información para el número proporcionado.');
+                    }
                 } else {
-                    const error = await response.json();
-                    alert('Error al enviar los datos: ' + JSON.stringify(error));
+                    const queryError = await queryResponse.json();
+                    console.log('Error en la búsqueda:', queryError);
                 }
             } catch (error) {
-                alert('Error en la conexión: ' + error.message);
+                console.log('Error en la conexión:', error.message);
             }
         });
     </script>
