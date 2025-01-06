@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Nombre</title>
+    <title>Formulario de Número</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,17 +37,36 @@
     <h1>Formulario</h1>
     <form id="formulario">
         <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+            <label for="numero">Número:</label>
+            <input type="text" id="numero" name="numero" placeholder="Ingresa tu número" required>
         </div>
         <button type="submit">Enviar</button>
     </form>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        document.getElementById('formulario').addEventListener('submit', function(e) {
+        // URL y clave de Supabase
+        const supabaseUrl = 'https://ozehtmkllygdqfcznttn.supabase.co';
+        const supabaseKey = 'tu_supabase_key'; // Sustituye con tu API Key
+        const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Manejo del formulario
+        document.getElementById('formulario').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const nombre = document.getElementById('nombre').value;
-            alert(`Nombre ingresado: ${nombre}`);
+            const numero = document.getElementById('numero').value;
+
+            // Insertar el número en la base de datos de Supabase en la tabla 'invitacion'
+            const { data, error } = await supabase
+                .from('invitacion') // Nombre de la tabla
+                .insert([{ numero: numero }]); // Insertar el valor de 'numero'
+
+            if (error) {
+                alert('Error al guardar el número');
+                console.error(error);
+            } else {
+                alert(`Número guardado: ${numero}`);
+                console.log('Datos guardados:', data);
+            }
         });
     </script>
 </body>
